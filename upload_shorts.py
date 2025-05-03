@@ -5,21 +5,21 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
 # Configuration
-VIDEO_FOLDER =r"D:\youtube\Anime\shorts\output"  # Path to your video folder
-CLIENT_SECRETS_FILE = r"D:\Newfolder\credentials.json"  # Path to OAuth credentials
-SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
-START_DATE = datetime.datetime(2025, 5, 2, 15, 0)  # Start scheduling from May 2, 2025, 3 PM
-POSTS_PER_DAY = 4
-TIME_SLOTS = [21, 22, 23, 20]  # Hours for 3 PM, 4 PM, 5 PM, 8 PM
+VIDEO_FOLDER =r"D:...\video_file"  # Path to your video folder where you have all the videos imported
+CLIENT_SECRETS_FILE = r"D:\...\credentials.json"  # Path to OAuth credentials
+SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]  # this is scope added from gcp (more in readme file)
+START_DATE = datetime.datetime(2025, 5, 2, 15, 0)  # Start scheduling from May 2, 2025, 3 PM 
+POSTS_PER_DAY = 4 #no of reels i want to publish interval of 24hour
+TIME_SLOTS = [21, 22, 23, 20]  # Hours for 9 PM, 10 PM, 11 PM, 8 PM
 PRESET_DESCRIPTION = (
-    "Lost in the latest Manhua release or scratching your head at that Anime plot twist? No worries, we've got your back! We're breaking down all the essential info in quick, easy-to-digest Reels. Consider this your go-to spot for everything Manhua and Anime! Keywords: Anime plot explained, Manhua chapter recap, Anime episode summary, Manhua worldbuilding, Anime lore, Must-watch Anime, Top Manhua, Anime theories, Manhua updates, Anime news.    Fair Use: Copyright Disclaimer under Section 107 of the Copyright Act 1976, allowance is made for fair use for purposes such as criticism, comment, news reporting, teaching, scholarship, and research. Fair use is a use permitted by copyright statute that might otherwise be infringing. Non-profit, educational or personal use tips the balance in favor of fair use. "
-    "#animeexplained #manhuarecap #animereview #manhuaanalysis #whattowatchanime #bestmanhua #animecommunity #mangaexplained #otakulife #animelover"
-    "#YouTubeShorts #DailyShorts Like and comment to share your thoughts!"
+    "Your video description here"
+    "add any hastags you want to add"
+    "add any keywords you want to add"
 )
-PRESET_TAGS = ["YouTubeShorts", "Manhua", "Manhuaexplained", "AnimationVideo", "Viral"]
+PRESET_TAGS = ["YouTubeShorts", "ABCtags", "Viral"]
 
 def authenticate_youtube():
-    flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
+    flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)  #learn more about client_secrets_file from readme file
     credentials = flow.run_local_server(port=0)
     return build("youtube", "v3", credentials=credentials)
 
@@ -43,13 +43,13 @@ def schedule_video(youtube, video_filename, schedule_time):
             "title": title,
             "description": PRESET_DESCRIPTION,
             "tags": PRESET_TAGS,
-            "categoryId": "1",  # Film & animation
+            "categoryId": "1",  # Film & animation (choose the category, follow readme for use)
             "defaultLanguage": "en"
         },
         "status": {
             "privacyStatus": "private",
             "publishAt": schedule_time.strftime("%Y-%m-%dT%H:%M:%S+00:00"),
-            "selfDeclaredMadeForKids": False,
+            "selfDeclaredMadeForKids": False,  #true , if your content is for kids like cartoons and all
             "embeddable": True
         }
     }
@@ -74,7 +74,7 @@ def main():
     current_date = START_DATE
     video_index = 0
 
-    while video_index < len(video_files):
+    while video_index < len(video_files):     #this part is for the looping on video file content on based of the date and time in they created
         for slot in TIME_SLOTS:
             if video_index >= len(video_files):
                 break
